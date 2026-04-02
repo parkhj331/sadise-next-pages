@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사디세 NEXT × PISA 2029 MAIL 방향성 분석</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --kakao-yellow: #FEE500;
+    --kakao-brown: #3C1E1E;
+    --accent-blue: #2563EB;
+    --accent-green: #059669;
+    --accent-orange: #EA580C;
+    --accent-purple: #7C3AED;
+    --accent-red: #DC2626;
+    --bg: #FAFAF8;
+    --card-bg: #FFFFFF;
+    --text: #1A1A1A;
+    --text-secondary: #6B7280;
+    --border: #E5E7EB;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+  .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* Header */
+  .header {
+    text-align: center;
+    margin-bottom: 48px;
+    padding: 48px 32px;
+    background: linear-gradient(135deg, #1E293B 0%, #334155 100%);
+    border-radius: 20px;
+    color: white;
+  }
+  .header .badge {
+    display: inline-block;
+    background: var(--kakao-yellow);
+    color: var(--kakao-brown);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 16px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
+  .header .subtitle { font-size: 15px; color: #CBD5E1; margin-bottom: 4px; }
+  .header .date { font-size: 13px; color: #64748B; }
+
+  /* Section */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 3px solid var(--kakao-yellow);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .num {
+    background: var(--kakao-yellow);
+    color: var(--kakao-brown);
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 800; flex-shrink: 0;
+  }
+
+  /* Card */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .card h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .card p { color: var(--text-secondary); font-size: 14px; line-height: 1.8; }
+
+  /* Stat Row */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 14px;
+    text-align: center;
+  }
+  .stat-item .value { font-size: 22px; font-weight: 800; color: var(--accent-blue); }
+  .stat-item .label { font-size: 11px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4; }
+
+  /* Timeline */
+  .timeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .timeline::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0; right: 0;
+    height: 3px;
+    background: var(--border);
+    z-index: 0;
+  }
+  .tl-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 8px;
+  }
+  .tl-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--accent-blue);
+    margin: 0 auto 8px;
+    border: 3px solid white;
+    box-shadow: 0 0 0 2px var(--accent-blue);
+  }
+  .tl-dot.highlight { background: var(--accent-orange); box-shadow: 0 0 0 2px var(--accent-orange); width: 18px; height: 18px; }
+  .tl-dot.future { background: var(--border); box-shadow: 0 0 0 2px var(--border); }
+  .tl-year { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .tl-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.4; }
+  .tl-item.now .tl-year { color: var(--accent-orange); }
+
+  /* Case Card */
+  .case-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; }
+  .case-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    border-top: 4px solid var(--accent-blue);
+  }
+  .case-card h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .case-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+  .case-card .case-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 100px;
+    background: #EFF6FF; color: var(--accent-blue);
+    margin-bottom: 10px;
+  }
+
+  /* Argument */
+  .arg-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .arg-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+  }
+  .arg-card.arg1::before { background: var(--accent-blue); }
+  .arg-card.arg2::before { background: var(--accent-orange); }
+  .arg-card.arg3::before { background: var(--accent-green); }
+  .arg-card .arg-num {
+    font-size: 12px; font-weight: 700;
+    color: white;
+    padding: 3px 12px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .arg-card.arg1 .arg-num { background: var(--accent-blue); }
+  .arg-card.arg2 .arg-num { background: var(--accent-orange); }
+  .arg-card.arg3 .arg-num { background: var(--accent-green); }
+  .arg-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 10px; }
+  .arg-card p { font-size: 14px; color: var(--text-secondary); line-height: 1.8; }
+
+  /* Comparison Box */
+  .compare-box {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: center;
+    margin: 24px 0;
+    background: var(--card-bg);
+    border: 2px solid var(--accent-purple);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .compare-side {
+    padding: 24px;
+    text-align: center;
+  }
+  .compare-side.old { background: #FEF2F2; }
+  .compare-side.new { background: #F0FDF4; }
+  .compare-side .label { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+  .compare-side.old .label { color: var(--accent-red); }
+  .compare-side.new .label { color: var(--accent-green); }
+  .compare-side .desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
+  .compare-arrow {
+    font-size: 24px;
+    color: var(--accent-purple);
+    padding: 0 8px;
+    font-weight: 700;
+  }
+
+  /* MAIL Grid */
+  .mail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .mail-domain {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .mail-domain::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
+  .mail-domain:nth-child(1)::before { background: var(--accent-blue); }
+  .mail-domain:nth-child(2)::before { background: var(--accent-orange); }
+  .mail-domain:nth-child(3)::before { background: var(--accent-green); }
+  .mail-domain .icon { font-size: 32px; margin-bottom: 10px; }
+  .mail-domain h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .mail-domain ul { text-align: left; font-size: 12px; color: var(--text-secondary); margin-top: 10px; padding-left: 16px; }
+  .mail-domain ul li { margin-bottom: 4px; }
+
+  /* AILit Grid */
+  .ailit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .ailit-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .ailit-item .icon { font-size: 24px; margin-bottom: 6px; }
+  .ailit-item h5 { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+  .ailit-item p { font-size: 11px; color: var(--text-secondary); }
+
+  /* Mapping Table */
+  .mapping-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .mapping-table thead th {
+    background: #1E293B;
+    color: white;
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .mapping-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  .mapping-table tbody tr:last-child td { border-bottom: none; }
+  .mapping-table tbody tr:nth-child(even) { background: #F9FAFB; }
+
+  /* Tags */
+  .tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    margin: 2px;
+  }
+  .tag-strong { background: #DCFCE7; color: #166534; }
+  .tag-partial { background: #FEF3C7; color: #92400E; }
+  .tag-weak { background: #FEE2E2; color: #991B1B; }
+  .tag-new { background: #EDE9FE; color: #5B21B6; }
+
+  /* Gap Cards */
+  .gap-card {
+    border-left: 4px solid;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    background: var(--card-bg);
+    border-radius: 0 12px 12px 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .gap-card.existing { border-left-color: var(--accent-green); }
+  .gap-card.enhance { border-left-color: var(--accent-orange); }
+  .gap-card.new { border-left-color: var(--accent-purple); }
+  .gap-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .gap-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.8; }
+
+  /* Age Calc */
+  .age-calc {
+    background: linear-gradient(135deg, #EFF6FF, #F0FDF4);
+    border: 2px solid var(--accent-blue);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 24px;
+  }
+  .age-calc h3 { color: var(--accent-blue); font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .age-flow {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .age-flow .step {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 18px;
+    text-align: center;
+    font-size: 13px;
+    flex: 1; min-width: 140px;
+  }
+  .age-flow .step strong { display: block; font-size: 16px; color: var(--accent-blue); }
+  .age-flow .arrow { font-size: 20px; color: var(--accent-blue); flex-shrink: 0; }
+  .pilot-rec {
+    background: var(--accent-blue);
+    color: white;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 14px; font-weight: 600;
+    text-align: center;
+  }
+
+  /* Rec Box */
+  .rec-box {
+    background: linear-gradient(135deg, #FEF9C3, #FEF3C7);
+    border: 2px solid var(--kakao-yellow);
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+  .rec-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 12px; }
+  .rec-box p { font-size: 14px; line-height: 1.8; }
+
+  /* Next Grid */
+  .next-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .next-card {
+    background: var(--card-bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .next-card .priority {
+    font-size: 11px; font-weight: 700; color: white;
+    background: var(--accent-purple);
+    padding: 3px 10px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .next-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 8px; }
+  .next-card p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
+
+  /* Sub Heading */
+  .sub-heading {
+    font-size: 15px; font-weight: 700;
+    margin: 24px 0 16px;
+  }
+
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 12px;
+  }
+  .footer a { color: var(--accent-blue); }
+
+  .source-list {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-top: 12px;
+  }
+  .source-list a { color: var(--accent-blue); }
+
+  @media (max-width: 768px) {
+    .mail-grid, .ailit-grid, .case-grid, .next-grid { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: repeat(2, 1fr); }
+    .age-flow { flex-direction: column; }
+    .age-flow .arrow { transform: rotate(90deg); }
+    .compare-box { grid-template-columns: 1fr; }
+    .compare-arrow { transform: rotate(90deg); padding: 8px 0; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="badge">에듀임팩트 내부 검토 자료</div>
+    <h1>사디세 NEXT × PISA 2029 MAIL</h1>
+    <div class="subtitle">AI 시대 커리큘럼 방향성 도출을 위한 프레임워크 분석</div>
+    <div class="date">2026.03.31</div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 1: PISA 2029 MAIL 개요 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">1</span>
+      PISA 2029 MAIL 개요
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <h3>PISA란?</h3>
+      <p>
+        PISA(Programme for International Student Assessment)는 OECD가 2000년부터 3년 주기로 시행하는 세계 최대 규모의 국제 학업성취도 평가입니다. 만 15세 학생을 대상으로 읽기·수학·과학 역량을 측정하며, 매 주기마다 하나의 <strong>혁신 도메인(innovative domain)</strong>을 추가로 평가합니다. 2022년 기준 81개국·지역, 약 69만 명의 학생이 참여했으며, 그 결과는 참여국의 교육과정 개편과 정책 수립에 직접적인 근거 자료로 활용됩니다.
+      </p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-item">
+        <div class="value">81개국</div>
+        <div class="label">참여 국가·지역<br>(PISA 2022)</div>
+      </div>
+      <div class="stat-item">
+        <div class="value">69만 명</div>
+        <div class="label">참여 학생 수<br>(PISA 2022)</div>
+      </div>
+      <div class="stat-item">
+        <div class="value">2000년~</div>
+        <div class="label">25년간 지속된<br>국제 평가 체계</div>
+      </div>
+      <div class="stat-item">
+        <div class="value">3년 주기</div>
+        <div class="label">정기 시행<br>(2029 다음 회차)</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <h3>PISA 2029의 혁신 도메인: MAIL</h3>
+      <p>
+        MAIL(Media and Artificial Intelligence Literacy)은 PISA 2029에 새로 도입되는 혁신 도메인으로, 15세 학생들이 디지털 콘텐츠·미디어 플랫폼·AI 시스템과 <strong>효과적이고 윤리적이며 책임감 있게</strong> 상호작용할 수 있는 역량을 평가합니다. OECD는 2026년 1월 첫 번째 프레임워크 초안("Navigating an Evolving Digital World")을 발표했으며, EU-OECD가 공동 개발 중인 AI 리터러시 프레임워크(AILit)가 MAIL 평가에 직접 기여하는 구조입니다.
+      </p>
+      <p style="margin-top: 12px;">
+        평가는 단순 지필 시험이 아니라, <strong>소셜미디어·생성형 AI 도구 등을 시뮬레이션한 환경</strong>에서 학생이 정보를 판별하고 AI와 협업하는 과정을 직접 관찰하는 방식으로 진행될 예정입니다. 예를 들어 "AI가 생성한 콘텐츠를 식별하고 그 이유를 설명하라"는 유형의 과제가 포함됩니다.
+      </p>
+    </div>
+
+    <h3 class="sub-heading">MAIL 3대 도메인</h3>
+    <div class="mail-grid">
+      <div class="mail-domain">
+        <div class="icon" style="font-size:16px; color:#2563EB; font-weight:700;">A&C</div>
+        <h4>접근과 이해<br><span style="font-size:11px; color:var(--accent-blue);">Access & Comprehension</span></h4>
+        <ul>
+          <li>미디어 메시지·AI 생성 콘텐츠 이해 및 해석</li>
+          <li>AI 플랫폼과 미디어 시스템의 작동 원리 파악</li>
+          <li>콘텐츠 큐레이션 메커니즘 인식</li>
+        </ul>
+      </div>
+      <div class="mail-domain">
+        <div class="icon" style="font-size:16px; color:#EA580C; font-weight:700;">E&R</div>
+        <h4>평가와 성찰<br><span style="font-size:11px; color:var(--accent-orange);">Evaluation & Reflection</span></h4>
+        <ul>
+          <li>정보 출처의 신뢰성 판단</li>
+          <li>편향·조작·설득 의도 탐지</li>
+          <li>공정성·프라이버시·책임성 등 윤리적 결과 인식</li>
+        </ul>
+      </div>
+      <div class="mail-domain">
+        <div class="icon" style="font-size:16px; color:#059669; font-weight:700;">C&E</div>
+        <h4>창작과 참여<br><span style="font-size:11px; color:var(--accent-green);">Creation & Engagement</span></h4>
+        <ul>
+          <li>AI 시스템과의 윤리적 협업·창작</li>
+          <li>디지털 공간에서의 책임감 있는 참여</li>
+          <li>AI를 활용한 소통·협업과 인간 작업 개선</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 class="sub-heading">MAIL을 뒷받침하는 OECD-EU AI 리터러시 프레임워크(AILit) 4대 영역</h3>
+    <div class="ailit-grid">
+      <div class="ailit-item">
+        <div class="icon" style="font-size:14px; color:#2563EB; font-weight:700;">Engage</div>
+        <h5>Engage with AI</h5>
+        <p>AI 사용을 인식하고 출력물을 비판적으로 평가</p>
+      </div>
+      <div class="ailit-item">
+        <div class="icon" style="font-size:14px; color:#EA580C; font-weight:700;">Create</div>
+        <h5>Create with AI</h5>
+        <p>AI와 협업하여 창작, 소유권·귀속 문제 대응</p>
+      </div>
+      <div class="ailit-item">
+        <div class="icon" style="font-size:14px; color:#059669; font-weight:700;">Manage</div>
+        <h5>Manage AI</h5>
+        <p>전략적으로 AI에 과업 위임, 인간 작업 강화</p>
+      </div>
+      <div class="ailit-item">
+        <div class="icon" style="font-size:14px; color:#7C3AED; font-weight:700;">Design</div>
+        <h5>Design AI</h5>
+        <p>AI 시스템 원리 이해, 공정성·영향 탐구</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>AILit 프레임워크는 지식(Knowledge)·기술(Skills)·태도(Attitudes) 3차원에 걸쳐 <strong>22개 세부 역량</strong>으로 구성되며, PISA 2029 MAIL 평가에 직접 기여하는 구조입니다. 2025년 5월 EU-OECD가 검토 초안을 발표했고, 2026년 내 최종 확정될 예정입니다.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 2: PISA가 한국 교육 정책에 반영된 사례 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">2</span>
+      PISA가 한국 교육 정책에 반영된 사례
+    </div>
+
+    <div class="card" style="margin-bottom: 24px;">
+      <p>
+        한국은 PISA 결과를 교육 정책 수립의 핵심 증거 자료로 활용하는 대표적인 국가입니다. 교육부와 한국교육과정평가원(KICE)은 매 PISA 결과 발표 시 공동 심층 분석을 수행하며, 그 결과가 교육과정 개편·정책 신설의 근거로 직접 연결되어 왔습니다. 아래는 주요 사례입니다.
+      </p>
+    </div>
+
+    <div class="case-grid">
+      <div class="case-card">
+        <div class="case-tag">교육과정 패러다임 전환</div>
+        <h4>PISA 혁신 도메인 → 역량 중심 교육과정</h4>
+        <p>PISA가 2012년 '창의적 문제해결력', 2015년 '협력적 문제해결력'을 혁신 도메인으로 측정하면서, 한국은 <strong>2015 개정 교육과정 총론에 '역량(competency)' 개념을 최초 공식 포함</strong>했습니다. 지식 전달 중심에서 역량 기반 교육으로의 전환이 PISA 프레임워크 변화에 직접 영향받은 대표적 사례입니다.</p>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">교육 시수 확대</div>
+        <h4>디지털 리터러시 약점 → 정보 교육 2배 확대</h4>
+        <p>PISA 결과에서 한국 학생의 "온라인 정보 편향성 식별 교육 경험"이 49.1%로 OECD 평균(54%)보다 낮게 나타난 것이 근거 중 하나로 작용하여, <strong>2022 개정 교육과정에서 정보과 시수가 2배 확대</strong>되었습니다(초등 17→34시간, 중등 34→68시간).</p>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">학생 웰빙 정책</div>
+        <h4>삶 만족도 65위 → 행복 교육 정책화</h4>
+        <p>PISA 2015에서 한국 학생의 삶 만족도가 71개국 중 65위로 나타난 것이 사회적 충격을 주면서, 교육부가 "학생 중심 교수·학습방법 개선, 행복한 학교생활"을 공식 정책 방향으로 선언했고, 자유학기제 확대 등의 정책으로 이어졌습니다.</p>
+      </div>
+      <div class="case-card">
+        <div class="case-tag">코로나 교육 회복</div>
+        <h4>PISA 2022 학력 회복 → 정책 성과 검증</h4>
+        <p>코로나19 이후 OECD 평균이 하락한 반면 한국은 수학·읽기·과학 모두 상승했는데, 교육부는 이를 <strong>'교육회복종합방안'(교사·강사 17만 명 투입)의 성과</strong>로 분석하며 후속 정책의 추진 동력으로 활용했습니다.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>
+        이처럼 PISA는 한국에서 단순한 국제 순위 비교를 넘어, <strong>교육과정 총론 개편, 교과 시수 조정, 정책 방향 설정, 정책 성과 검증</strong>의 직접적 근거로 기능해왔습니다. PISA 2029에 MAIL이라는 새로운 도메인이 추가된다는 것은, 향후 한국 교육 정책에서 미디어·AI 리터러시가 공식적인 성과 지표로 포함될 가능성이 매우 높다는 의미입니다.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 3: 선제적 정렬 필요 사유 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">3</span>
+      선제적 정렬이 필요한 이유
+    </div>
+
+    <div class="card" style="margin-bottom: 24px; background: linear-gradient(135deg, #FEF2F2, #FFF7ED);">
+      <h3>문제 인식</h3>
+      <p>
+        한국의 기존 PISA 활용 패턴은 <strong>"결과 발표 → KICE 분석 → 정책 반영"</strong>의 후속 대응(reactive) 방식입니다. 그러나 PISA 2029 MAIL은 기존과 근본적으로 다른 상황에 놓여 있으며, 후속 대응만으로는 구조적으로 늦을 수밖에 없습니다. 아래 네 가지 논거가 이를 뒷받침합니다.
+      </p>
+    </div>
+
+    <div class="arg-card arg1">
+      <div class="arg-num">논거 1</div>
+      <h4>프레임워크 사전 공개는 OECD가 설계한 준비 기간이다</h4>
+      <p>
+        PISA의 운영 구조상, 평가 프레임워크 초안은 <strong>시험 시행 3년 전에 발표</strong>됩니다. PISA 2029 MAIL 초안이 2026년 1월에 나왔고, 실제 시험은 2029년입니다. OECD 공식 문서에서도 <em>"PISA 2029's MAIL domain will support countries in developing and evaluating education strategies that foster critical digital skills"</em>라고 명시하고 있습니다. 즉, 프레임워크 공개 시점부터 교육 전략을 개발하는 것이 OECD가 의도한 활용 방식이며, 결과가 나온 뒤에 분석하는 것만이 유일한 경로가 아닙니다.
+      </p>
+    </div>
+
+    <div class="arg-card arg2">
+      <div class="arg-num">논거 2</div>
+      <h4>기존에 없는 완전히 새로운 도메인은 후속 대응이 구조적으로 불가능하다</h4>
+      <p>
+        이전 PISA 주요 도메인(읽기·수학·과학)은 수십 년간 축적된 교육과정이 이미 존재했기 때문에, 결과를 보고 미세 조정하는 후속 대응으로 충분했습니다. 그러나 MAIL은 <strong>AI 리터러시와 미디어 리터러시를 통합 평가하는 PISA 사상 최초의 시도</strong>이며, 한국 교육과정에도 이에 대응하는 체계적 커리큘럼이 아직 없습니다. 결과 발표(2031.12) 이후 커리큘럼을 개발하기 시작하면, 교육과정 반영까지 통상 3~5년이 소요되는 점을 감안할 때 실질적 적용은 2034년 이후가 될 가능성이 높습니다.
+      </p>
+    </div>
+
+    <div class="arg-card arg3">
+      <div class="arg-num">논거 3</div>
+      <h4>상위권 국가들은 이미 프레임워크 단계에서 움직이고 있다</h4>
+      <p>
+        PISA 1위 싱가포르는 "Transforming Education through Technology Masterplan 2030"을 통해 초중등에 AI 적응형 학습 시스템을 이미 단계적으로 도입 중이며, EU는 OECD와 공동으로 AILit 프레임워크를 개발하여 PISA 2029 MAIL 평가 설계에 직접 참여하고 있습니다. 독일도 과거 PISA 2000 "PISA 쇼크" 이후 NES 교육과정을 PISA 프레임워크에 선제적으로 정렬한 전례가 있습니다. 이들은 2031년 결과 발표를 기다리는 것이 아니라, <strong>프레임워크 설계 단계에서부터 대비</strong>하고 있습니다.
+      </p>
+    </div>
+
+    <div class="arg-card" style="border-left: 4px solid #0891B2;">
+      <div class="arg-num" style="background: #0891B2;">논거 4</div>
+      <h4>OECD는 디지털 역량 평가를 단계적으로 확대하고 있다 — PISA 2025가 그 징후다</h4>
+      <p>
+        PISA는 매 주기마다 독립적인 혁신 도메인(innovative domain)을 평가합니다 (2012 창의적 문제해결, 2015 협력적 문제해결, 2018 글로벌 역량, 2022 창의적 사고). 그런데 <strong>2025년에는 처음으로 디지털 역량을 혁신 도메인으로 채택</strong>하여 "Learning in the Digital World(LDW)"를 평가합니다. 이는 컴퓨팅 도구를 활용한 자기주도 학습 역량을 측정하는 것입니다. 그리고 바로 다음 주기인 <strong>2029년에 미디어·AI 리터러시(MAIL)로 확대</strong>됩니다. 두 도메인이 공식적으로 연결된 것은 아니지만, 디지털 학습 역량 → 미디어·AI 리터러시로의 테마적 심화는 OECD가 디지털 역량 평가를 전략적으로 확대하고 있음을 보여줍니다.
+      </p>
+      <p style="margin-top: 10px;">
+        특히 PISA 2025 LDW 결과는 <strong>2027년 12월에 별도 발표</strong>될 예정인데, 이 결과가 한국 학생의 디지털 학습 역량 수준을 드러내는 시점에 "우리는 이미 2029 MAIL까지 내다보고 준비하고 있다"고 말할 수 있다면, 선제적 대응의 설득력이 한층 높아집니다.
+      </p>
+    </div>
+
+    <div class="compare-box">
+      <div class="compare-side old">
+        <div class="label">기존 방식 (Reactive)</div>
+        <div class="desc">결과 발표(2031) → KICE 분석 → 정책 반영 → 커리큘럼 개발<br><strong>실질 적용: 2034년 이후 전망</strong></div>
+      </div>
+      <div class="compare-arrow">→</div>
+      <div class="compare-side new">
+        <div class="label">NEXT 방식 (Proactive)</div>
+        <div class="desc">프레임워크 공개(2026) → 선제적 정렬 → 파일럿 운영 → 성과 축적<br><strong>실질 적용: 2027~2028년</strong></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>타이밍의 전략적 가치</h3>
+      <p>
+        PISA 2025 메인 결과가 <strong>2026년 하반기</strong>에 발표됩니다. PISA 2018·2022의 ICT 친숙도 배경설문(ICT Familiarity Questionnaire)에서 이미 한국 학생의 디지털 리터러시 교육 경험이 OECD 평균 이하로 나타난 바 있으므로(예: 피싱메일 분간 교육 경험 34.7% vs OECD 평균 41.2%), 2025 결과에서도 유사한 약점이 재확인될 가능성이 높습니다. 이 시점에 "우리는 이미 2029 MAIL을 대비해서 프로그램을 설계하고 있다"고 말할 수 있다면, 선제적 대응의 가치가 극대화됩니다.
+      </p>
+      <p style="margin-top: 12px;">
+        또한, 민간 교육기관은 공교육보다 기민하게 움직일 수 있다는 것이 사디세의 구조적 강점입니다. 공교육이 PISA 결과 → 교육과정 고시 → 현장 적용의 긴 사이클을 거치는 동안, <strong>사디세는 프레임워크 공개 시점에 바로 파일럿을 설계하고 실행할 수 있습니다</strong>.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 4: 기존 사디세와의 연계 지점 분석 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">4</span>
+      기존 사디세 × PISA 2029 MAIL 연계 지점 분석
+    </div>
+
+    <table class="mapping-table">
+      <thead>
+        <tr>
+          <th style="width:18%;">사디세 7대 주제</th>
+          <th style="width:22%;">MAIL 도메인 연결</th>
+          <th style="width:22%;">AILit 영역 연결</th>
+          <th style="width:15%;">연계 강도</th>
+          <th style="width:23%;">비고</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>디지털 에티켓</strong></td>
+          <td>창작과 참여</td>
+          <td>Engage with AI</td>
+          <td><span class="tag tag-strong">강한 연계</span></td>
+          <td>AI 시대 에티켓으로 확장 시 직접 대응</td>
+        </tr>
+        <tr>
+          <td><strong>사이버폭력</strong></td>
+          <td>평가와 성찰</td>
+          <td>Engage with AI</td>
+          <td><span class="tag tag-strong">강한 연계</span></td>
+          <td>AI 기반 사이버폭력(딥페이크 등) 신규 이슈 반영 필요</td>
+        </tr>
+        <tr>
+          <td><strong>개인정보보호</strong></td>
+          <td>평가와 성찰</td>
+          <td>Manage AI</td>
+          <td><span class="tag tag-strong">강한 연계</span></td>
+          <td>AI 데이터 수집·활용에 대한 이해로 확장 필요</td>
+        </tr>
+        <tr>
+          <td><strong>감정 및 공감</strong></td>
+          <td>창작과 참여</td>
+          <td>Engage with AI</td>
+          <td><span class="tag tag-strong">강한 연계</span></td>
+          <td>AI 시대 핵심 인간 역량 (WEF도 강조)</td>
+        </tr>
+        <tr>
+          <td><strong>디지털 리터러시</strong></td>
+          <td>접근과 이해</td>
+          <td>Engage / Design AI</td>
+          <td><span class="tag tag-partial">부분 연계</span></td>
+          <td>AI 리터러시로의 확장이 핵심 과제</td>
+        </tr>
+        <tr>
+          <td><strong>저작권</strong></td>
+          <td>창작과 참여</td>
+          <td>Create with AI</td>
+          <td><span class="tag tag-partial">부분 연계</span></td>
+          <td>AI 생성물 저작권·귀속 문제는 현재 미반영</td>
+        </tr>
+        <tr>
+          <td><strong>온라인 정체성</strong></td>
+          <td>평가와 성찰</td>
+          <td>Engage with AI</td>
+          <td><span class="tag tag-partial">부분 연계</span></td>
+          <td>AI 페르소나·합성 미디어 판별까지 확장 필요</td>
+        </tr>
+        <tr style="background: #F5F3FF !important;">
+          <td colspan="2" style="color:var(--accent-purple); font-weight:600;">접근과 이해 — AI 작동 원리</td>
+          <td>Design AI</td>
+          <td><span class="tag tag-weak">약한 연계</span></td>
+          <td>AI 시스템 작동 원리 이해 — 신규 영역 필요</td>
+        </tr>
+        <tr style="background: #F5F3FF !important;">
+          <td colspan="2" style="color:var(--accent-purple); font-weight:600;">평가와 성찰 — 알고리즘 편향</td>
+          <td>Manage AI</td>
+          <td><span class="tag tag-weak">약한 연계</span></td>
+          <td>비판적 AI 출력 평가 — 신규 영역 필요</td>
+        </tr>
+        <tr style="background: #F5F3FF !important;">
+          <td colspan="2" style="color:var(--accent-purple); font-weight:600;">창작과 참여 — 인간-AI 협업</td>
+          <td>Create / Manage AI</td>
+          <td><span class="tag tag-weak">약한 연계</span></td>
+          <td>전략적 AI 협업·과업 위임 — 신규 영역 필요</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 강점 -->
+    <h3 class="sub-heading" style="color: var(--accent-green);">[ 연계/강화 지점 ] — 사디세가 이미 다루고 있는 MAIL 역량</h3>
+
+    <div class="gap-card existing">
+      <h4><span class="tag tag-strong">강점</span> 윤리적 디지털 행동 기반</h4>
+      <p>사디세의 디지털 에티켓·사이버폭력·개인정보보호 교육은 MAIL의 '평가와 성찰' 및 '창작과 참여' 도메인과 직접 연결됩니다. 온라인 공간에서의 책임감 있는 행동 규범은 AI 시대에도 여전히 핵심적이며, 이 토대 위에서 AI 맥락으로의 확장이 가능합니다.</p>
+    </div>
+    <div class="gap-card existing">
+      <h4><span class="tag tag-strong">강점</span> 공감과 감정 교육</h4>
+      <p>사디세의 '감정 및 공감' 교육은 MAIL이 강조하는 윤리적 참여의 정서적 기반이 됩니다. WEF Future of Jobs Report(2025)에서도 공감·적극적 경청 등 인간 중심 기술이 AI 시대에 가장 안정적인 역량이라고 강조하고 있어, 사디세의 이 강점은 오히려 AI 시대에 더욱 가치가 높아집니다.</p>
+    </div>
+    <div class="gap-card existing">
+      <h4><span class="tag tag-strong">강점</span> 11년간의 교육 인프라와 학교 네트워크</h4>
+      <p>2,643개 학교, 28만여 명의 교육 경험은 MAIL 관련 커리큘럼을 빠르게 확산할 수 있는 강력한 채널입니다. 민간 최장기 디지털 시민성 교육 프로그램이라는 공신력은 AI 시민성 교육으로의 전환에서 큰 자산이 됩니다.</p>
+    </div>
+
+    <!-- 강화 필요 -->
+    <h3 class="sub-heading" style="color: var(--accent-orange);">[ 강화 필요 ] — 기존 주제를 AI 맥락으로 업그레이드</h3>
+
+    <div class="gap-card enhance">
+      <h4><span class="tag tag-partial">강화</span> 디지털 리터러시 → AI 리터러시</h4>
+      <p>현재 정보 검색·평가 중심의 교육을 <strong>AI 생성 콘텐츠 해석, 알고리즘 기반 큐레이션 인식, AI 플랫폼 작동 원리 이해</strong>까지 확장해야 합니다. "내가 보는 콘텐츠가 왜 내게 추천되었는지"를 이해하는 수준의 교육이 MAIL '접근과 이해' 도메인의 핵심입니다.</p>
+    </div>
+    <div class="gap-card enhance">
+      <h4><span class="tag tag-partial">강화</span> 저작권 → AI 생성물 귀속 · 학업 무결성</h4>
+      <p>인간 창작물 중심의 저작권 교육에서, AI와 협업해 만든 콘텐츠의 소유권, AI 학습 데이터의 저작권, AI 생성물의 인용·귀속 문제까지 포괄해야 합니다. 한국 중고생 72.6%가 생성형 AI를 사용하고 있는 현실에서, 학업에서의 AI 사용과 학업 무결성(academic integrity) 문제는 시급한 교육 과제입니다.</p>
+    </div>
+    <div class="gap-card enhance">
+      <h4><span class="tag tag-partial">강화</span> 온라인 정체성 → 합성 미디어 판별</h4>
+      <p>MAIL이 강조하는 <strong>딥페이크 판별, AI 챗봇의 인간 모방 인식, 합성 미디어 리터러시</strong>로 확장합니다. "상대가 사람인지 AI인지", "이 이미지·영상이 AI가 만든 것인지"를 판별하는 능력은 PISA 2029에서 직접 평가될 가능성이 높으며, 사디세가 2025년부터 딥페이크 교육을 시작한 것은 좋은 출발점입니다.</p>
+    </div>
+    <div class="gap-card enhance">
+      <h4><span class="tag tag-partial">강화</span> 사이버폭력 → AI 기반 사이버폭력 대응</h4>
+      <p>딥페이크 성착취물, AI 생성 허위 이미지를 이용한 괴롭힘, AI 챗봇을 악용한 사이버불링 등 새로운 유형의 AI 기반 사이버폭력에 대한 인식과 대응 역량이 추가되어야 합니다.</p>
+    </div>
+
+    <!-- 신규 -->
+    <h3 class="sub-heading" style="color: var(--accent-purple);">[ 신규 도입 필요 ] — 현재 사디세에 없는 MAIL 핵심 역량</h3>
+
+    <div class="gap-card new">
+      <h4><span class="tag tag-new">신규</span> AI 시스템 작동 원리 이해</h4>
+      <p>MAIL은 학생들이 AI가 <strong>어떻게 데이터를 학습하고, 어떤 설계 선택이 결과에 영향을 미치며, 왜 특정 출력을 생성하는지</strong>에 대한 기본적 이해를 요구합니다. 코딩 교육이 아니라 "AI의 작동 논리"에 대한 개념적 이해가 핵심입니다. 머신러닝의 기본 개념, 추천 알고리즘의 원리, 생성형 AI의 출력 메커니즘 등을 체험형으로 교육할 수 있습니다.</p>
+    </div>
+    <div class="gap-card new">
+      <h4><span class="tag tag-new">신규</span> 알고리즘 편향 인식 · 비판적 AI 출력 평가</h4>
+      <p>MAIL '평가와 성찰' 도메인의 핵심으로, AI 출력물의 정확성·편향·한계를 비판적으로 평가하는 역량입니다. <strong>할루시네이션(허위 정보 생성) 판별, 알고리즘 편향 인식, 필터 버블 효과 이해</strong> 등이 포함됩니다.</p>
+    </div>
+    <div class="gap-card new">
+      <h4><span class="tag tag-new">신규</span> 인간-AI 전략적 협업과 과업 위임</h4>
+      <p>AILit의 'Manage AI'와 'Create with AI'에 해당하는 영역으로, <strong>언제 AI에 과업을 위임하고 언제 인간이 직접 판단해야 하는지</strong>를 전략적으로 결정하는 역량입니다. 프롬프트 설계, AI 출력의 검증과 개선, AI와의 반복적 협업 과정 등을 체험하는 교육이 필요합니다.</p>
+    </div>
+    <div class="gap-card new">
+      <h4><span class="tag tag-new">신규</span> AI 거버넌스 참여 의식</h4>
+      <p>시민으로서 AI 정책·규제에 대해 목소리를 내고 참여하는 태도입니다. 학생들이 "AI가 어떤 규칙 아래에서 운영되어야 하는가"에 대해 토론하고 의견을 형성하는 경험을 제공합니다. 사디세의 토론형 교육 방식이 이 영역에 자연스럽게 연결될 수 있습니다.</p>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 5: NEXT에 적합한 연령 분석 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">5</span>
+      NEXT 파일럿에 적합한 대상 연령 분석
+    </div>
+
+    <div class="age-calc">
+      <h3>PISA 2029 대상자 연령 역추산</h3>
+      <div class="age-flow">
+        <div class="step">PISA 시행 연도<br><strong>2029년</strong></div>
+        <span class="arrow">→</span>
+        <div class="step">대상 연령<br><strong>만 15세</strong></div>
+        <span class="arrow">→</span>
+        <div class="step">출생 연도<br><strong>2013~2014년생</strong></div>
+        <span class="arrow">→</span>
+        <div class="step">2026년 현재<br><strong>만 12~13세</strong></div>
+      </div>
+      <div class="pilot-rec">
+        파일럿 최적 대상: 초등 6학년 ~ 중학 1학년 (2026년 기준)
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom: 16px;">
+      <h3>이중 트랙 전략 제안</h3>
+      <p>
+        사디세의 기존 교육 대상이 초등학생 중심이라는 점을 고려하면 두 가지 트랙을 병행할 수 있습니다.
+      </p>
+      <p style="margin-top: 12px;">
+        <strong>Track A — PISA 직접 대상 (초6~중1)</strong><br>
+        PISA 2029에서 실제 평가를 받게 될 세대에게 MAIL 역량을 집중적으로 길러주는 파일럿 프로그램입니다. 현재 사디세의 초등 고학년 콘텐츠를 기반으로, 앞서 도출한 강화·신규 영역을 추가합니다.
+      </p>
+      <p style="margin-top: 12px;">
+        <strong>Track B — 사전 단계 (초3~5학년)</strong><br>
+        기존 사디세 7대 주제를 AI 맥락으로 리프레이밍한 교육을 제공하여, 이 학생들이 초6~중1이 되었을 때 Track A에 자연스럽게 진입할 수 있는 단계적 역량 축적 경로를 마련합니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>타임라인</h3>
+      <div class="timeline" style="margin-top: 16px;">
+        <div class="tl-item now">
+          <div class="tl-dot highlight"></div>
+          <div class="tl-year">2026</div>
+          <div class="tl-desc">MAIL 초안 발표<br>NEXT 설계·파일럿</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2026 하반기</div>
+          <div class="tl-desc">PISA 2025<br>메인 결과 발표</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2027.12</div>
+          <div class="tl-desc">PISA 2025 LDW<br>결과 발표</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-year">2027~2028</div>
+          <div class="tl-desc">NEXT 본격 운영<br>성과 데이터 축적</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-year">2029</div>
+          <div class="tl-desc">PISA 2029<br>MAIL 평가 시행</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot future"></div>
+          <div class="tl-year">2031.12</div>
+          <div class="tl-desc">PISA 2029<br>결과 발표</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SECTION 6: NEXT 방향성 종합 제언 -->
+  <!-- ============================================================ -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">6</span>
+      NEXT 방향성 종합 제언
+    </div>
+
+    <div class="rec-box">
+      <h3>핵심 포지셔닝</h3>
+      <p>
+        사디세의 가장 큰 차별점은 <strong>"기술 교육"이 아닌 "시민성 교육"</strong>이라는 정체성입니다. PISA 2029 MAIL 역시 코딩이나 AI 기술 자체가 아니라, AI와 미디어 환경에서의 <strong>비판적 판단·윤리적 행동·책임감 있는 참여</strong> 역량을 평가합니다. 따라서 사디세 NEXT는 "AI 기술 교육 프로그램"이 아닌 <strong>"AI 시대의 시민성 교육 프로그램"</strong>으로서의 정체성을 유지하되, MAIL 프레임워크의 역량 체계에 정렬하는 것이 가장 합리적인 방향입니다.
+      </p>
+    </div>
+
+    <div class="next-grid">
+      <div class="next-card">
+        <div class="priority">PRIORITY 1</div>
+        <h4>파일럿 대상: 초6~중1</h4>
+        <p>PISA 2029 직접 대상 세대에 대한 파일럿 프로그램을 먼저 설계하되, 초3~5학년을 위한 사전 단계 프로그램도 함께 구상하여 단계적 역량 축적 경로를 마련합니다.</p>
+      </div>
+      <div class="next-card">
+        <div class="priority">PRIORITY 2</div>
+        <h4>기존 7대 주제를 AI 맥락으로 리프레이밍</h4>
+        <p>기존 교육의 골격은 유지하면서 각 주제에 AI 시나리오를 결합합니다. 사이버폭력 → 딥페이크 폭력, 저작권 → AI 생성물 귀속, 개인정보 → AI 데이터 수집 등.</p>
+      </div>
+      <div class="next-card">
+        <div class="priority">PRIORITY 3</div>
+        <h4>MAIL 갭 영역 신규 모듈 개발</h4>
+        <p>AI 작동 원리 이해, 알고리즘 편향 인식, 인간-AI 협업 전략, AI 거버넌스 참여 의식 등 현재 사디세에 없는 핵심 영역을 신규 모듈로 개발합니다. 체험형·토론형 교수법을 우선 적용합니다.</p>
+      </div>
+      <div class="next-card">
+        <div class="priority">PRIORITY 4</div>
+        <h4>PISA MAIL 기반 성과 측정 체계</h4>
+        <p>MAIL의 3대 도메인에 대응하는 사전-사후 역량 측정 도구를 개발하여, 교육 효과를 PISA 프레임워크에 맞춰 입증할 수 있는 체계를 마련합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p>에듀임팩트팀 내부 검토 자료 · 2026.03.31</p>
+    <div class="source-list" style="margin-top: 16px; text-align: left;">
+      <strong>참고 자료</strong><br>
+      · <a href="https://www.oecd.org/en/about/projects/pisa-2029-media-and-artificial-intelligence-literacy.html">OECD PISA 2029 MAIL</a>
+      · <a href="https://ailiteracyframework.org/">OECD-EU AI Literacy Framework (AILit)</a>
+      · <a href="https://www.oecd.org/content/dam/oecd/en/about/projects/edu/the-pisa-2029-media-and-artificial-intelligence-(mail)-assessment-will-shed-light-on-whether-young-students-have-had-opportunities-to-learn-and-to-engage-proactively-and-critically-in-a-world-where-production,-participation,-and-social-networking-are-increasingly-mediated-by-digital-and-ai-tools-/PISA%202029%20MAIL%20Assessment%20Framework%20First%20Draft.pdf">PISA 2029 MAIL Framework First Draft (PDF)</a><br>
+      · <a href="https://www.kice.re.kr/sub/info.do?m=010303&s=kice">KICE 국제학업성취도평가(PISA)</a>
+      · <a href="https://nces.ed.gov/surveys/pisa/schedule.asp">PISA 2022 & 2025 Schedule (NCES)</a>
+      · <a href="https://www.nature.com/articles/s41599-025-04403-z">Effects of PISA on Global Education Reform (Nature, 2025)</a><br>
+      · <a href="https://www.moe.gov.sg/education-in-sg/educational-technology-journey/edtech-masterplan/artificial-intelligence-in-education">Singapore MOE: AI in Education</a>
+      · <a href="https://juniorschool.kakaoimpact.org/">카카오임팩트 사이좋은 디지털 세상</a>
+      · <a href="https://www.tandfonline.com/doi/full/10.1080/03054985.2023.2259794">Politics of PISA in South Korea (Oxford Review of Education)</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
